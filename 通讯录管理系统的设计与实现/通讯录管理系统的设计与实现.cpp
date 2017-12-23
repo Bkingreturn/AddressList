@@ -8,6 +8,7 @@ int main()
 {
 	int i; 
 	string name;
+	string phone;
 	AddressList L(200,20);
 	int choices;
 	do {
@@ -43,7 +44,18 @@ int main()
 			L.ListDisp();
 			break;
 		case 5:
-			L.Find();
+			cout << "请输入你想要的查找方式【按姓名查找（1），按手机号查找（2）】：";
+			cin >> i;
+			if (i == 1) {
+				cout << "请输入你想要查找的联系人姓名：";
+				cin >> name;
+				L.MoveName(name);
+			}
+			else if (i == 2) {
+				cout << "请输入你想要查找的联系人手机号：";
+				cin >> phone;
+				L.MovePhone(phone);
+			}
 			break;
 		case 6:
 			cout << "请输入您想创建的分组数：";
