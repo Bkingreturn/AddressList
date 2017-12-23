@@ -81,7 +81,7 @@ public:
 	~AddressList();//析构函数，删除通讯录空间；
 	void CreateAddressList(int n);//创建具有n个记录的通讯录；
 	void Insert();//在通讯录尾插入一条记录；
-	string Delete(string name);//删除一条记录；
+	void Delete(string name);//删除一条记录；
 	void GetElem(int i);//获取第i个记录的值；
 	int Locate(string name);//元素定位；
 	void Clear();//清空记录；
@@ -120,30 +120,34 @@ void AddressList::CreateAddressList(int n) {
 	length = n+1;
 }
 void AddressList::Insert() {
+	ofstream fout;
+	fout.open("addresslist.txt",ios_base::app);
 	if (length > listsize) cout << "通讯录已满。" << endl;
 	Human e;
 	cout << "请输入姓名，单位，住址，电话：";
 	cin >> e.name >> e.company_name >> e.address >> e.phone;
 	e.id = length;
 	elem[length] = e;
+	fout<< elem[length].id << "\t" << elem[length].name << "\t" << elem[length].company_name << "\t" << elem[length].address << "\t" << elem[length].phone << "\t" << endl;
 	length++;
+	fout.close();
 }
-string AddressList::Delete(string name) {      //删除姓名为name的记录
+void AddressList::Delete(string name) {      //删除姓名为name的记录
 	Human e;
 	int i, j;
 	for (i = 1; i < length; i++) {
 		if (elem[i].name == name)
-			e = elem[i];
-		else
-			return "记录不存在";
+		{
+			e = elem[i]; break;
+		}
 	}
 	if (length == 0) cout << "无法删除，通讯录记录为空！" << endl;;
 	if (e.id<1 || e.id>length + 1) cout << "删除位置异常！" << endl;
-	for (j = i; j < length; j++) {
+	for (j = i; j < length-1; j++) {
 		elem[j] = elem[j + 1];
 	}
 	length--;
-	return "'" + name + "'已被删除";
+	cout << name << "已被删除" << endl;;
 }
 int AddressList::Locate(string name) {
 	int i;
@@ -208,6 +212,7 @@ void AddressList::Save() {
 }
 void AddressList::Read() {
 	int i=1;
+	length = i+1;
 	char data[50];
 	ifstream fin;
 	fin.open("addresslist.txt");
@@ -216,7 +221,7 @@ void AddressList::Read() {
 	while (fin >> elem[i].id >> elem[i].name >> elem[i].company_name >> elem[i].address >> elem[i].phone) {
 		cout << elem[i].id << "\t" << elem[i].name << "\t" << elem[i].company_name << "\t" << elem[i].address << "\t" << elem[i].phone << "\t" << endl;
 		i++;
+		length = i;
 	}
-
 	fin.close();
 }
