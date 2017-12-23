@@ -143,6 +143,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <Text Include="addresslist.txt" />
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>

@@ -19,7 +19,9 @@ int main()
 		cout << "6-创建分组" << endl;
 		cout << "7-将联系人xx添加到分组xx中" << endl;
 		cout << "8-分组显示联系人" << endl;
-		cout << "9-退出" << endl;
+		cout << "9-保存" << endl;
+		cout << "10-读取" << endl;
+		cout << "11-退出" << endl;
 		cout << "Enter Choice:";
 		cin >> choices;
 		switch (choices)
@@ -57,12 +59,18 @@ int main()
 			L.GroupDisplay();
 			break;
 		case 9:
+			L.Save();
+			break;
+		case 10:
+			L.Read();
+			break;
+		case 11:
 			break;
 		default:
 			cout << "非法选择！";
 			break;
 		}
-	} while (choices != 9);
+	} while (choices != 11);
     return 0;
 }
 

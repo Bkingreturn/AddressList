@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include<iostream>
 #include<string>
+#include<fstream>
 using namespace std;
 struct Human
 {
@@ -194,4 +195,28 @@ void AddressList::GroupDisplay() {
 }
 void AddressList::Find() {
 
+}
+void AddressList::Save() {
+	int i;
+	ofstream fout;
+	fout.open("addresslist.txt");
+	fout << "ID\t姓名\t单位\t地址\t电话" << endl;
+	for (i = 1; i < length; i++) {
+		fout << elem[i].id << "\t" << elem[i].name << "\t" << elem[i].company_name << "\t" << elem[i].address << "\t" << elem[i].phone << "\t" << endl;
+	}
+	fout.close();
+}
+void AddressList::Read() {
+	int i=1;
+	char data[50];
+	ifstream fin;
+	fin.open("addresslist.txt");
+	fin.getline(data, 49);
+	cout << data << endl;
+	while (fin >> elem[i].id >> elem[i].name >> elem[i].company_name >> elem[i].address >> elem[i].phone) {
+		cout << elem[i].id << "\t" << elem[i].name << "\t" << elem[i].company_name << "\t" << elem[i].address << "\t" << elem[i].phone << "\t" << endl;
+		i++;
+	}
+
+	fin.close();
 }
