@@ -3,6 +3,7 @@
 #include<string>
 #include<fstream>
 #include<iomanip>
+#include<cctype>
 using namespace std;
 struct Human
 {
@@ -101,13 +102,25 @@ public:
 	void MovePhone(string);//使查找和显示的记录位置按手机号前移或后移
 	void GroupDisplay();//分组显示；
 	void AddToGroup(string);//加入组；
+	bool Justice(string, string);//判断姓名，电话号码是否合法；
 };
-/*AddressList::AddressList(int m) {
-	elem = new Human[m];//动态申请一组连续的内存空间；
-	if (!elem) cout << "内存分配失败！";
-	length = 0;
-	listsize = m;
-}*/
+bool AddressList::Justice(string name, string phone) {
+	if (name == "") {
+		cout << "姓名不能为空！" << endl;
+		return 0;
+	}
+	if (phone.length() > 11 || phone.length() <= 0) {
+		cout << "手机号格式错误！" << endl;
+		return 0;
+	}
+	for (char c : phone) {
+		if (isalpha(c)) {
+			cout << "手机号码格式错误！" << endl;
+			return 0;
+		}
+	}
+	return 1;
+}
 AddressList::~AddressList() {
 	delete[]elem;
 	elem = NULL;
@@ -118,9 +131,11 @@ void AddressList::CreateAddressList(int n) {
 	if (n > listsize) cout << "参数非法！";
 	cout << "请依次输入" << n << "条记录：" << endl;
 	for (int i = 1; i <= n; i++) {
-		cout << "请输入姓名，单位，住址，电话：";
-		cin >> elem[i].name >> elem[i].company_name >> elem[i].address >> elem[i].phone;
-		elem[i].id = i;
+		do {
+			cout << "请输入姓名，单位，住址，电话：";
+			cin >> elem[i].name >> elem[i].company_name >> elem[i].address >> elem[i].phone;
+			elem[i].id = i;
+		} while (!Justice(elem[i].name, elem[i].phone));
 	}
 	length = n;
 }
@@ -129,8 +144,10 @@ void AddressList::Insert() {
 	fout.open("addresslist.txt",ios_base::app);
 	if (length > listsize-1) cout << "通讯录已满。" << endl;
 	Human e;
+	do{
 	cout << "请输入姓名，单位，住址，电话：";
 	cin >> e.name >> e.company_name >> e.address >> e.phone;
+	} while (!Justice(e.name, e.phone));
 	e.id = length+1;
 	elem[length+1] = e;
 	fout<< elem[length + 1].id << setw(21) << elem[length + 1].name << setw(21) << elem[length + 1].company_name << setw(21) << elem[length + 1].address << setw(21) << elem[length + 1].phone << endl;
@@ -181,8 +198,10 @@ void AddressList::ListDisp() {
 void AddressList::Change(string name) {
 	int flag;
 	flag=FindName(name);
-	cout << "请按下列顺序输入您想要修改的信息（姓名，单位，地址，电话）：";
-	cin >> elem[flag].name >> elem[flag].company_name >> elem[flag].address >> elem[flag].phone;
+	do{
+		cout << "请按下列顺序输入您想要修改的信息（姓名，单位，地址，电话）：";
+		cin >> elem[flag].name >> elem[flag].company_name >> elem[flag].address >> elem[flag].phone;
+	}while(!Justice(elem[flag].name, elem[flag].phone));
 	cout << "修改完成。请保存修改。" << endl;
 }
 void AddressList::SortName() {
