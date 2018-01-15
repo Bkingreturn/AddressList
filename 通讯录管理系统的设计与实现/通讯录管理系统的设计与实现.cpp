@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include "AddressList.h"
+#include <cctype>
 
 int main()
 {
@@ -24,8 +25,10 @@ int main()
 		cout << "10-保存" << endl;
 		cout << "11-读取" << endl;
 		cout << "12-退出" << endl;
-		cout << "Enter Choice:";
-		cin >> choices;
+		do{
+			cout << "Enter Choice:";
+			cin >> choices;
+		}while (choices <1 || choices >12||!isdigit(choices));
 		switch (choices)
 		{
 		case 1:
