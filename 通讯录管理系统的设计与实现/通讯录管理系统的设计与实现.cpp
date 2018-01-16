@@ -10,7 +10,7 @@ int main()
 	int i; 
 	string name;
 	string phone;
-	AddressList L(200,20);
+	AddressList L(200, 20);
 	int choices;
 	do {
 		cout << "1-创建通讯录" << endl;
@@ -28,7 +28,7 @@ int main()
 		do{
 			cout << "Enter Choice:";
 			cin >> choices;
-		}while (choices <1 || choices >12||!isdigit(choices));
+		}while (choices <1 ||choices >12);
 		switch (choices)
 		{
 		case 1:
