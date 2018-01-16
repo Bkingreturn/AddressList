@@ -54,7 +54,7 @@ void AddressGroup::CreateGroup(int n) {
 	length = n;
 }
 void AddressGroup::AddGroup() {
-	if (length > listsize) cout << "注意！注意！分组过多！" << endl;
+	if (length >= listsize) cout << "注意！注意！分组过多！" << endl;
 	Group g;
 	cout << "请输入组名：";
 	cin >> g.name;
@@ -164,9 +164,9 @@ void AddressList::Delete(string name) {      //删除姓名为name的记录
 		}
 		else cout << "无法找到该记录！";
 	}
-	if (length == 0) cout << "无法删除，通讯录记录为空！" << endl;;
+	if (length == 0) cout << "无法删除，通讯录记录为空！" << endl;
 	if (e.id<1 || e.id>length) cout << "删除位置异常！" << endl;
-	for (j = i; j < length; j++) {
+	for (j = i; j <= length; j++) {
 		elem[j] = elem[j + 1];
 	}
 	length--;

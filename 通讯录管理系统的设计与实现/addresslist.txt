@@ -1,4 +1,3 @@
 ID                姓名                单位                地址                电话
-3                 hand         nantongdaxue                  879          18936165328
 2                 jhon         nantongdaxue                  897          18036161051
 1                 mary         nantongdaxue                  587          15282736233
