@@ -32,6 +32,9 @@ public:
 	void AddGroup();//添加分组；
 	string GetGroupName(int);//获取组名；
 	int GetLen();//获取表长
+	void DeleteGroup(string name);//删除分组；
+	void SaveGroup();//保存分组；
+	void ReadGroup();//读取分组；
 };
 AddressGroup::AddressGroup(int m) {
 	group = new Group[m];//动态申请一组连续的内存空间；
@@ -67,7 +70,40 @@ string AddressGroup::GetGroupName(int n) {
 int AddressGroup::GetLen() {
 	return length;
 }
-
+void AddressGroup::DeleteGroup(string name) {
+	for (int i = 0; i < length; i++) {
+		if (group[i].name == name) {
+			for (int j = i; j < length-1; j++) {
+				group[j].name = group[j + 1].name;
+			}
+		}
+	}
+	length--;
+}
+void AddressGroup::SaveGroup() {
+	int i;
+	ofstream fout;
+	fout.open("addressgrouplist.txt");
+	fout << "组名" << endl;
+	for (i = 0; i < length; i++) {
+		fout << group[i].name << endl;
+	}
+	fout.close();
+}
+void AddressGroup::ReadGroup() {
+	int i = 0;
+	char data[100];
+	ifstream fin;
+	fin.open("addressgrouplist.txt");
+	fin.getline(data, 99);
+	cout << data << endl;
+	while (fin >> group[i].name) {
+		cout << group[i].name<<endl;
+		length = i+1;
+		i++;
+	}
+	fin.close();
+}
 class AddressList:public AddressGroup {
 private:
 	Human *elem;//表基地址；
@@ -91,9 +127,9 @@ public:
 	int Full();//检测通讯录是否已满；
 	int Length();//检测通讯录的长度；
 	void ListDisp();//输出通讯录；
-	void Save();//将通讯录存入文件；
+	void Save();//将通讯录存入文件,保存时按姓名有序保存；
 	void Read();//从文件中读取通讯录；
-	void Change(string);//修改记录的信息；
+	void Change(string,int);//修改记录的信息；
 	void SortName();//按姓名排序；
 	void SortPhone();//按号码排序；
 	int FindName(string);//按姓名查找通讯录中的记录；
@@ -102,6 +138,9 @@ public:
 	void MovePhone(string);//使查找和显示的记录位置按手机号前移或后移
 	void GroupDisplay();//分组显示；
 	void AddToGroup(string);//加入组；
+	void ChangeGroup(string);//改变分组;
+	void MoveOutGroup(string);//移出分组；
+	void Display(string name);//详细显示单个联系人的信息。
 	bool Justice(string, string);//判断姓名，电话号码是否合法；
 };
 bool AddressList::Justice(string name, string phone) {
@@ -195,12 +234,31 @@ void AddressList::ListDisp() {
 	}
 	cout << endl;
 }
-void AddressList::Change(string name) {
+void AddressList::Change(string name,int i) {
 	int flag;
 	flag=FindName(name);
 	do{
-		cout << "请按下列顺序输入您想要修改的信息（姓名，单位，地址，电话）：";
-		cin >> elem[flag].name >> elem[flag].company_name >> elem[flag].address >> elem[flag].phone;
+		switch (i)
+		{
+		case 1:
+			cout << "请输入姓名：";
+			cin >> elem[flag].name;
+			break;
+		case 2:
+			cout << "请输入住址：";
+			cin >> elem[flag].address;
+			break;
+		case 3:
+			cout << "请输入单位：";
+			cin >> elem[flag].company_name;
+			break;
+		case 4:
+			cout << "请输入手机号：";
+			cin >> elem[flag].phone;
+			break;
+		default:
+			break;
+		}
 	}while(!Justice(elem[flag].name, elem[flag].phone));
 	cout << "修改完成。请保存修改。" << endl;
 }
@@ -242,6 +300,7 @@ void AddressList::SortPhone() {
 }
 void AddressList::AddToGroup(string name) {
 	int i, n;
+	ReadGroup();
 	string groupname;
 	cout << "你想把" << name << "加入哪个分组？"<<endl;
 	for (i = 0; i < GetLen(); i++)
@@ -252,6 +311,22 @@ void AddressList::AddToGroup(string name) {
 	for (i = 1; i <= length; i++) {
 		if (elem[i].name == name) elem[i].group_name = GetGroupName(n - 1);
 	}
+}
+void AddressList::ChangeGroup(string name) {
+	int flag,n;
+	flag = FindName(name);
+	cout << "把" << name << "加到分组：";
+	for (int i = 0; i < GetLen(); i++)
+	{
+		cout << i + 1 << "." << GetGroupName(i) << endl;
+	}
+	cin >> n;
+	elem[flag].group_name = GetGroupName(n - 1);
+}
+void AddressList::MoveOutGroup(string name) {
+	int flag;
+	flag = FindName(name);
+	elem[flag].group_name = "";
 }
 void AddressList::GroupDisplay() {
 	int i,j;
@@ -293,6 +368,7 @@ int AddressList::FindPhone(string phone) {
 }
 void AddressList::Save() {
 	int i;
+	SortName();
 	ofstream fout;
 	fout.open("addresslist.txt");
 	fout << "ID" << setw(20) << "姓名" << setw(20) << "单位" << setw(20) << "地址" << setw(20) << "电话" << endl;
@@ -326,6 +402,20 @@ void AddressList::MoveName(string name) {
 	e = elem[1];
 	elem[1] = elem[flag];
 	elem[flag] = e;
+}
+void AddressList::Display(string name) {
+	for (int i = 1; i <= length; i++) {
+		if (elem[i].name == name) {
+			cout << "编号:" << elem[i].id << endl;
+			cout << "姓名：" << elem[i].name << endl;
+			cout << "住址:" << elem[i].address << endl;
+			cout << "单位:" << elem[i].company_name << endl;
+			cout << "手机号:" << elem[i].phone << endl;
+			cout << "分组：";
+			if (elem[i].group_name == "") cout << "无" << endl;
+			else cout << elem[i].group_name << endl;
+		}
+	}
 }
 void AddressList::MovePhone(string phone) {
 	int flag;

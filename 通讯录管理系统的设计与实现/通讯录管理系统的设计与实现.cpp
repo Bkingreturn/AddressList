@@ -13,22 +13,21 @@ int main()
 	AddressList L(200, 20);
 	int choices;
 	do {
+		cout << "----------主菜单----------" << endl;
 		cout << "1-创建通讯录" << endl;
 		cout << "2-添加联系人" << endl;
 		cout << "3-删除联系人" << endl;
 		cout << "4-显示联系人信息" << endl;
 		cout << "5-查找联系人" << endl;
-		cout << "6-修改联系人信息" << endl;
+		cout << "6-联系人详细信息" << endl;
 		cout << "7-创建分组" << endl;
-		cout << "8-将联系人xx添加到分组xx中" << endl;
+		cout << "8-删除分组" << endl;
 		cout << "9-分组显示联系人" << endl;
 		cout << "10-保存" << endl;
 		cout << "11-读取" << endl;
 		cout << "12-退出" << endl;
-		do{
-			cout << "Enter Choice:";
-			cin >> choices;
-		}while (choices <1 ||choices >12);
+		cout << "Enter Choice:";
+		cin >> choices;
 		switch (choices)
 		{
 		case 1:
@@ -62,9 +61,49 @@ int main()
 			}
 			break;
 		case 6:
-			cout << "请输入你想要修改的联系人姓名：";
+			cout << "请输入你想要查看的联系人姓名：";
 			cin >> name;
-			L.Change(name);
+			do {
+				L.Display(name);
+				cout << "1-修改姓名" << endl;
+				cout << "2-修改住址" << endl;
+				cout << "3-修改单位" << endl;
+				cout << "4-修改手机号" << endl;
+				cout << "5-改变分组" << endl;
+				cout << "6-移出所属分组" << endl;
+				cout << "7-加入分组" << endl;
+				cout << "8-退出" << endl;
+				cout << "Enter Choices:";
+				cin >> choices;
+				switch (choices)
+				{
+				case 1:
+					L.Change(name, 1);
+					break;
+				case 2:
+					L.Change(name, 2);
+					break;
+				case 3:
+					L.Change(name, 3);
+					break;
+				case 4:
+					L.Change(name, 4);
+					break;
+				case 5:
+					L.ChangeGroup(name);
+					break;
+				case 6:
+					L.MoveOutGroup(name);
+					break;
+				case 7:
+					L.AddToGroup(name);
+					break;
+				case 8:
+					break;
+				default:
+					break;
+				}
+			} while (choices!=8);
 			break;
 		case 7:
 			cout << "请输入您想创建的分组数：";
@@ -72,15 +111,35 @@ int main()
 			L.CreateGroup(i);
 			break;
 		case 8:
-			cout << "输入您想要进行分组的联系人：";
+			cout << "输入您想要进行删除的分组：";
 			cin >> name;
-			L.AddToGroup(name);
+			L.DeleteGroup(name);
 			break;
 		case 9:
 			L.GroupDisplay();
 			break;
 		case 10:
-			L.Save();
+			do {
+				cout << "1-保存通讯录" << endl;
+				cout << "2-保存分组" << endl;
+				cout << "3-退出" << endl;
+				cout << "Enter Chioces:" << endl;
+				cin >> choices;
+				switch (choices)
+				{
+				case 1:
+					L.Save();
+					break;
+				case 2:
+					L.SaveGroup();
+					break;
+				case 3:
+					break;
+				default:
+					break;
+				}
+			} while (choices!=3);
+			
 			break;
 		case 11:
 			L.Read();
