@@ -23,10 +23,11 @@ int main()
 		cout << "6-联系人详细信息" << endl;
 		cout << "7-创建分组" << endl;
 		cout << "8-删除分组" << endl;
-		cout << "9-分组显示联系人" << endl;
-		cout << "10-保存" << endl;
-		cout << "11-读取" << endl;
-		cout << "12-退出" << endl;
+		cout << "9-添加分组" << endl;
+		cout << "10-分组显示联系人" << endl;
+		cout << "11-保存" << endl;
+		cout << "12-读取" << endl;
+		cout << "13-退出" << endl;
 		cout << "Enter Choice:";
 		cin >> choices;
 		switch (choices)
@@ -118,9 +119,12 @@ int main()
 			L.DeleteGroup(name);
 			break;
 		case 9:
-			L.GroupDisplay();
+			L.AddGroup();
 			break;
 		case 10:
+			L.GroupDisplay();
+			break;
+		case 11:
 			do {
 				cout << "1-保存通讯录" << endl;
 				cout << "2-保存分组" << endl;
@@ -143,16 +147,16 @@ int main()
 			} while (choices!=3);
 			
 			break;
-		case 11:
+		case 12:
 			L.Read();
 			break;
-		case 12:
+		case 13:
 			break;
 		default:
 			cout << "非法选择！";
 			break;
 		}
-	} while (choices != 12);
+	} while (choices != 13);
     return 0;
 }
 

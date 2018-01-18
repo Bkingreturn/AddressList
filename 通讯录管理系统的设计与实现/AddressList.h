@@ -57,12 +57,16 @@ void AddressGroup::CreateGroup(int n) {
 	length = n;
 }
 void AddressGroup::AddGroup() {
+	ofstream fout;
+	fout.open("addressgrouplist.txt", ios_base::app);
 	if (length >= listsize) cout << "注意！注意！分组过多！" << endl;
 	Group g;
 	cout << "请输入组名：";
 	cin >> g.name;
 	group[length] = g;
 	length++;
+	fout << g.name;
+	fout.close();
 }
 string AddressGroup::GetGroupName(int n) {
 	return group[n].name;
