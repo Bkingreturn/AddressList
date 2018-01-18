@@ -8,6 +8,7 @@
 int main()
 {
 	int i; 
+	int id;
 	string name;
 	string phone;
 	AddressList L(200, 20);
@@ -63,6 +64,7 @@ int main()
 		case 6:
 			cout << "请输入你想要查看的联系人姓名：";
 			cin >> name;
+			id=L.FindName(name);
 			do {
 				L.Display(name);
 				cout << "1-修改姓名" << endl;
@@ -78,25 +80,25 @@ int main()
 				switch (choices)
 				{
 				case 1:
-					L.Change(name, 1);
+					L.Change(id, 1);
 					break;
 				case 2:
-					L.Change(name, 2);
+					L.Change(id, 2);
 					break;
 				case 3:
-					L.Change(name, 3);
+					L.Change(id, 3);
 					break;
 				case 4:
-					L.Change(name, 4);
+					L.Change(id, 4);
 					break;
 				case 5:
-					L.ChangeGroup(name);
+					L.ChangeGroup(id);
 					break;
 				case 6:
-					L.MoveOutGroup(name);
+					L.MoveOutGroup(id);
 					break;
 				case 7:
-					L.AddToGroup(name);
+					L.AddToGroup(id);
 					break;
 				case 8:
 					break;
