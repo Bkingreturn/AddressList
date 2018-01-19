@@ -135,6 +135,7 @@ public:
 	void Change(int,int);//修改记录的信息；
 	void SortName();//按姓名排序；
 	void SortPhone();//按号码排序；
+	void SortId();//按编号排序；
 	int FindName(string);//按姓名查找通讯录中的记录；
 	int FindPhone(string);//按手机号码查找通讯录中的记录；
 	void MoveName(string);//使查找和显示的记录位置按姓名前移或后移；
@@ -177,12 +178,14 @@ void AddressList::CreateAddressList(int n) {
 			cout << "请输入姓名，单位，住址，电话：";
 			cin >> elem[i].name >> elem[i].company_name >> elem[i].address >> elem[i].phone;
 			elem[i].id = i;
+			AddToGroup(elem[i].id);
 		} while (!Justice(elem[i].name, elem[i].phone));
 	}
 	length = n;
 }
 void AddressList::Insert() {
 	ofstream fout;
+	int m;
 	fout.open("addresslist.txt",ios_base::app);
 	if (length > listsize-1) cout << "通讯录已满。" << endl;
 	Human e;
@@ -190,28 +193,31 @@ void AddressList::Insert() {
 	cout << "请输入姓名，单位，住址，电话：";
 	cin >> e.name >> e.company_name >> e.address >> e.phone;
 	} while (!Justice(e.name, e.phone));
-	e.id = length+1;
+	m = elem[1].id;
+	for (int i = 1; i < length; i++) {
+		if (m <= elem[i + 1].id) m = elem[i + 1].id;
+	}
+	e.id = m + 1;
 	elem[length+1] = e;
-	fout<< elem[length + 1].id << setw(21) << elem[length + 1].name << setw(21) << elem[length + 1].company_name << setw(21) << elem[length + 1].address << setw(21) << elem[length + 1].phone << endl;
+	AddToGroup(length+1);
+	fout<< elem[length + 1].id << setw(21) << elem[length + 1].name << setw(21) << elem[length + 1].company_name << setw(21) << elem[length + 1].address << setw(21) << elem[length + 1].phone << setw(21) << elem[length + 1].group_name <<  endl;
 	length++;
 	fout.close();
 }
 void AddressList::Delete(string name) {      //删除姓名为name的记录
 	Human e;
-	int i, j;
-	for (i = 1; i <= length; i++) {
-		if (elem[i].name == name)
-		{
-			e = elem[i]; break;
-		}
-	}
+	int flag,j;
 	if (length == 0) cout << "无法删除，通讯录记录为空！" << endl;
-	if (e.id<1 || e.id>length) cout << "删除位置异常！" << endl;
-	for (j = i; j <= length; j++) {
-		elem[j] = elem[j + 1];
+	flag=FindName(name);
+	if (flag)
+	{
+		e = elem[flag];
+		for (j = flag; j <= length; j++) {
+			elem[j] = elem[j + 1];
+		}
+		length--;
+		cout << name << "已被删除" << endl;
 	}
-	length--;
-	cout << name << "已被删除" << endl;;
 }
 int AddressList::Locate(string name) {
 	int i;
@@ -230,9 +236,9 @@ void AddressList::GetElem(int n) {
 }
 void AddressList::ListDisp() {
 	int i;
-	cout << "ID" << setw(20) << "姓名" << setw(20) << "单位" << setw(20) << "地址" << setw(20) << "电话" << endl;
+	cout << "ID" << setw(20) << "姓名" << setw(20) << "单位" << setw(20) << "地址" << setw(20) << "电话" << setw(20) << "分组" << endl;
 	for (i = 1; i <= length; i++) {
-		cout << elem[i].id << setw(21) << elem[i].name << setw(21) << elem[i].company_name << setw(21) << elem[i].address << setw(21) << elem[i].phone << endl;
+		cout << elem[i].id << setw(21) << elem[i].name << setw(21) << elem[i].company_name << setw(21) << elem[i].address << setw(21) << elem[i].phone << setw(21) << elem[i].group_name<< endl;
 	}
 	cout << endl;
 }
@@ -323,7 +329,7 @@ void AddressList::ChangeGroup(int id) {
 	elem[id].group_name = GetGroupName(n - 1);
 }
 void AddressList::MoveOutGroup(int id) {
-	elem[id].group_name = "";
+	elem[id].group_name = "none";
 }
 void AddressList::GroupDisplay() {
 	int i,j;
@@ -346,10 +352,12 @@ int AddressList::FindName(string name) {
 		if (name < elem[mid].name) high = mid - 1;
 		else if (name > elem[mid].name) low = mid + 1;
 		else {
-			flag = mid; break;
+			flag = mid;
+			return flag;
 		}
 	}
-	return flag;
+	cout << "未找到" << endl;
+	return 0;
 }
 int AddressList::FindPhone(string phone) {
 	SortPhone();
@@ -359,30 +367,34 @@ int AddressList::FindPhone(string phone) {
 		mid = (low + high) / 2;
 		if (phone < elem[mid].phone) high = mid - 1;
 		else if (phone > elem[mid].phone) low = mid + 1;
-		else { flag = mid; break; }
+		else {
+			flag = mid; 
+			return flag;
+		}
 	}
-	return flag;
+	cout << "未找到" << endl;
+	return 0;
 }
 void AddressList::Save() {
 	int i;
 	SortName();
 	ofstream fout;
 	fout.open("addresslist.txt");
-	fout << "ID" << setw(20) << "姓名" << setw(20) << "单位" << setw(20) << "地址" << setw(20) << "电话" << endl;
+	fout << "ID" << setw(20) << "姓名" << setw(20) << "单位" << setw(20) << "地址" << setw(20) << "电话" << setw(20)<<"分组"<<endl;
 	for (i = 1; i <= length; i++) {
-		fout << elem[i].id << setw(21) << elem[i].name << setw(21) << elem[i].company_name << setw(21) << elem[i].address << setw(21) << elem[i].phone <<endl;
+		fout << elem[i].id << setw(21) << elem[i].name << setw(21) << elem[i].company_name << setw(21) << elem[i].address << setw(21) << elem[i].phone << setw(21) << elem[i].group_name<<  endl;
 	}
 	fout.close();
 }
 void AddressList::Read() {
 	int i=1;
-	char data[100];
+	char data[200];
 	ifstream fin;
 	fin.open("addresslist.txt");
-	fin.getline(data, 99);
+	fin.getline(data, 199);
 	cout << data << endl;
-	while (fin >> elem[i].id >> elem[i].name >> elem[i].company_name >> elem[i].address >> elem[i].phone) {
-		cout << elem[i].id << setw(21) << elem[i].name << setw(21) << elem[i].company_name << setw(21) << elem[i].address << setw(21) << elem[i].phone << endl;
+	while (fin >> elem[i].id >> elem[i].name >> elem[i].company_name >> elem[i].address >> elem[i].phone>>elem[i].group_name) {
+		cout << elem[i].id << setw(21) << elem[i].name << setw(21) << elem[i].company_name << setw(21) << elem[i].address << setw(21) << elem[i].phone<< setw(21) << elem[i].group_name << endl;
 		length = i;
 		i++;
 	}

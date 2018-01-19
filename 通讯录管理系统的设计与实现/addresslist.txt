@@ -1,6 +1,4 @@
-ID                姓名                单位                地址                电话
-2                 jhon      nantongdaxuezhu                8-908          18265344785
-3                 keny         nantongdaxue                9-875          15236441555
-4                 lina      nantongdaxuezhu                9-204          14263547895
-1                 mary         nantongdaxue                9-897          15282736233
-5                 peny         nantongdaxue                2-875          16324587996
+ID                姓名                单位                地址                电话                分组
+3                 coop         nantongdaxue                4-902          16354785145              friends
+2                 kent         nantongdaxue                3-484          18636165328               family
+1                 mary         nantongdaxue                9-374          15282736233                class
